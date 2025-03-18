@@ -1,6 +1,6 @@
 var app = (function () {
     var selectedAuthor = null;
-    var api = apimock; // Cambia entre 'apimock' y 'apiclient' aquí
+    var api = apiclient; // Cambia entre 'apimock' y 'apiclient' aquí
 
     function updateBlueprintsInfo(blueprints) {
         console.log("Datos recibidos de la API:", blueprints);
@@ -81,7 +81,7 @@ var app = (function () {
     };
 })();
 
-// ✅ Evento `click` correctamente definido
+// Evento `click` correctamente definido
 $(document).ready(function () {
     $("#btn-get-blueprints").click(function () {
         let autor = $("#input-autor").val().trim();

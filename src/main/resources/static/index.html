@@ -20,6 +20,10 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+        .container-main {
+            display: grid;
+            grid-template-columns: 50% 50%;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -36,48 +40,52 @@
         #total-puntos {
             margin-top: 20px;
             font-weight: bold;
+            font-size: 20px;
         }
-         #blueprint-canvas-container {
+        #blueprint-canvas-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             margin-top: 20px;
-         }
+        }
     </style>
 </head>
 <body>
 
-<h1>Blueprints</h1>
+    <h1>Blueprints</h1>
 
-<div>
-    <label for="input-autor">Author: </label>
-    <input type="text" id="input-autor">
-    <button id="btn-get-blueprints">Get blueprints</button>
-</div>
+    <div>
+        <label for="input-autor">Author: </label>
+        <input type="text" id="input-autor">
+        <button id="btn-get-blueprints">Get blueprints</button>
+    </div>
 
-<h3 id="autor-seleccionado"></h3>
+    <div class="container-main">
+        <div>
+            <h3 id="autor-seleccionado"></h3>
+            <table id="tabla-blueprints">
+                <thead>
+                <tr>
+                    <th>Blueprint name</th>
+                    <th>Number of points</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Aquí se mostrarían los planos en el futuro -->
+                </tbody>
+            </table>
 
-<table id="tabla-blueprints">
-    <thead>
-    <tr>
-        <th>Blueprint name</th>
-        <th>Number of points</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Aquí se mostrarían los planos en el futuro -->
-    </tbody>
-</table>
+            <div id="total-puntos">
+                Total user points: <span id="total">0</span>
+            </div>
+        </div>
 
-<div id="total-puntos">
-    Total user points: <span id="total">0</span>
-</div>
-
-<div id="blueprint-canvas-container">
-    <h3 id="blueprint-title"></h3>
-    <canvas id="myCanvas" width="500" height="300" style="border:2px solid #000000;"> </canvas>
-</div>
+        <div id="blueprint-canvas-container">
+            <h3 id="blueprint-title"></h3>
+            <canvas id="myCanvas" width="500" height="300" style="border:2px solid #000000;"> </canvas>
+        </div>
+    </div>
 
 </body>
 </html>
