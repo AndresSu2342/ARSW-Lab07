@@ -8,9 +8,22 @@
 
 1. Agregue al canvas de la página un manejador de eventos que permita capturar los 'clicks' realizados, bien sea a través del mouse, o a través de una pantalla táctil. Para esto, tenga en cuenta [este ejemplo de uso de los eventos de tipo 'PointerEvent'](https://mobiforge.com/design-development/html5-pointer-events-api-combining-touch-mouse-and-pen) (aún no soportado por todos los navegadores) para este fin. Recuerde que a diferencia del ejemplo anterior (donde el código JS está incrustado en la vista), se espera tener la inicialización de los manejadores de eventos correctamente modularizado, tal [como se muestra en este codepen](https://codepen.io/hcadavid/pen/BwWbrw).
 
+   ![Image](https://github.com/user-attachments/assets/de2c4e93-b8f8-421a-b72a-798d7b8ec0b2)
+
+   ![Image](https://github.com/user-attachments/assets/df22afdd-03d8-4c6b-a6f0-1aea9857e6af)
+
 2. Agregue lo que haga falta en sus módulos para que cuando se capturen nuevos puntos en el canvas abierto (si no se ha seleccionado un canvas NO se debe hacer nada):
 	1. Se agregue el punto al final de la secuencia de puntos del canvas actual (sólo en la memoria de la aplicación, AÚN NO EN EL API!).
-	2. Se repinte el dibujo.
+
+    ![Image](https://github.com/user-attachments/assets/609f2f00-7aa7-4814-8e12-f9503374af4d)
+
+    2. Se repinte el dibujo.
+
+    ![Image](https://github.com/user-attachments/assets/b1c15dfe-a310-4e17-b803-ac915feff735)
+
+	![Image](https://github.com/user-attachments/assets/285f5615-8143-48bd-8708-e08c90469dc3)
+	
+    ![Image](https://github.com/user-attachments/assets/b8835cfb-b1ea-4a42-a615-e0c78b02c6f4)
 
 3. Agregue el botón Save/Update. Respetando la arquitectura de módulos actual del cliente, haga que al oprimirse el botón:
 	1. Se haga PUT al API, con el plano actualizado, en su recurso REST correspondiente.

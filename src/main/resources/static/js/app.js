@@ -40,26 +40,27 @@ var app = (function () {
         console.log(`Dibujando blueprint: ${bpname} de ${author}`);
 
         api.getBlueprintsByNameAndAuthor(author, bpname, function (blueprint) {
-            if (!blueprint || !blueprint.points) {
+            if (!blueprint || !blueprint.points || blueprint.points.length === 0) {
                 console.log("No se encontraron puntos en el blueprint.");
                 return;
             }
-
+            // Actualizamos el título y la variable actual
             $("#blueprint-title").text(`Current blueprint: ${bpname}`);
-            currentBlueprint = bpname;
-            points = blueprint.points; // Guardamos los puntos actuales
+             currentBlueprint = bpname;
 
+            // Guardamos los puntos obtenidos
+            points = blueprint.points;
+
+            // Limpiar el canvas antes de dibujar
             let canvas = document.getElementById("myCanvas");
             let ctx = canvas.getContext("2d");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            ctx.beginPath();
-            let points = blueprint.points;
-            ctx.moveTo(points[0].x, points[0].y);
-
+            // Dibujar los puntos
             if (points.length > 0) {
                 ctx.beginPath();
                 ctx.moveTo(points[0].x, points[0].y);
+
                 for (let i = 1; i < points.length; i++) {
                     ctx.lineTo(points[i].x, points[i].y);
                 }
@@ -73,6 +74,11 @@ var app = (function () {
         let ctx = canvas.getContext("2d");
 
         function addPoint(event) {
+             if (!currentBlueprint) {
+                console.log("No se puede agregar puntos sin seleccionar un blueprint.");
+                return;
+            }
+
             let rect = canvas.getBoundingClientRect();
             let x = event.clientX - rect.left;
             let y = event.clientY - rect.top;
@@ -80,6 +86,7 @@ var app = (function () {
             console.log(`Punto agregado: (${x}, ${y})`);
             points.push({ x: x, y: y });
 
+            // Dibujar la línea si hay al menos 2 puntos
             if (points.length > 1) {
                 ctx.beginPath();
                 ctx.moveTo(points[points.length - 2].x, points[points.length - 2].y);
@@ -88,7 +95,7 @@ var app = (function () {
             }
         }
 
-        canvas.addEventListener("pointerdown", addPoint);
+        canvas.addEventListener("pointerdown", addPoint, false);
     }
 
     return {

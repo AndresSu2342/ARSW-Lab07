@@ -47,8 +47,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-top: 20px;
+            margin: 20px 0px;
         }
+        .btn-container {
+            display: flex;
+            justify-content: space-around;
+        }
+
     </style>
 </head>
 <body>
@@ -80,10 +85,17 @@
                 Total user points: <span id="total">0</span>
             </div>
         </div>
+        <div class="container-canvas">
 
-        <div id="blueprint-canvas-container">
-            <h3 id="blueprint-title"></h3>
-            <canvas id="myCanvas" width="500" height="300" style="border:2px solid #000000;"> </canvas>
+            <div id="blueprint-canvas-container">
+                <button id="btn-create-blueprints">Create new blueprint</button>
+                <h3 id="blueprint-title"></h3>
+                <canvas id="myCanvas" width="500" height="300" style="border:2px solid #000000;"> </canvas>
+            </div>
+            <div class="btn-container">
+                <button id="btn-save-blueprints">Save/Update</button>
+                <button id="btn-delete-blueprints">Delete</button>
+            </div>
         </div>
     </div>
 
