@@ -1,5 +1,7 @@
 var app = (function () {
     var selectedAuthor = null;
+    var currentBlueprint = null;
+    var points = []; // Lista de puntos capturados
     var api = apiclient; // Cambia entre 'apimock' y 'apiclient' aquí
 
     function updateBlueprintsInfo(blueprints) {
@@ -44,6 +46,8 @@ var app = (function () {
             }
 
             $("#blueprint-title").text(`Current blueprint: ${bpname}`);
+            currentBlueprint = bpname;
+            points = blueprint.points; // Guardamos los puntos actuales
 
             let canvas = document.getElementById("myCanvas");
             let ctx = canvas.getContext("2d");
@@ -53,11 +57,38 @@ var app = (function () {
             let points = blueprint.points;
             ctx.moveTo(points[0].x, points[0].y);
 
-            for (let i = 1; i < points.length; i++) {
-                ctx.lineTo(points[i].x, points[i].y);
+            if (points.length > 0) {
+                ctx.beginPath();
+                ctx.moveTo(points[0].x, points[0].y);
+                for (let i = 1; i < points.length; i++) {
+                    ctx.lineTo(points[i].x, points[i].y);
+                }
+                ctx.stroke();
             }
-            ctx.stroke();
         });
+    }
+
+    function initCanvasEvent() {
+        let canvas = document.getElementById("myCanvas");
+        let ctx = canvas.getContext("2d");
+
+        function addPoint(event) {
+            let rect = canvas.getBoundingClientRect();
+            let x = event.clientX - rect.left;
+            let y = event.clientY - rect.top;
+
+            console.log(`Punto agregado: (${x}, ${y})`);
+            points.push({ x: x, y: y });
+
+            if (points.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(points[points.length - 2].x, points[points.length - 2].y);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+        }
+
+        canvas.addEventListener("pointerdown", addPoint);
     }
 
     return {
@@ -75,13 +106,14 @@ var app = (function () {
             });
         },
         drawBlueprint: drawBlueprint,
+        initCanvasEvent: initCanvasEvent, // Exponemos la función
         setApi: function (newApi) {
             api = newApi; // Permite cambiar dinámicamente la fuente de datos
         }
     };
 })();
 
-// Evento `click` correctamente definido
+// Inicializar el manejador de eventos cuando la página cargue
 $(document).ready(function () {
     $("#btn-get-blueprints").click(function () {
         let autor = $("#input-autor").val().trim();
@@ -91,4 +123,7 @@ $(document).ready(function () {
             console.log("Ingrese un autor válido.");
         }
     });
+    if (window.PointerEvent) {
+        app.initCanvasEvent();
+    }
 });
