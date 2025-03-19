@@ -31,6 +31,10 @@
 	
     ![Image](https://github.com/user-attachments/assets/b8835cfb-b1ea-4a42-a615-e0c78b02c6f4)
 
+    ![Image](https://github.com/user-attachments/assets/52055579-6f62-4ebc-9651-c3ab18d80388)
+
+	![Image](https://github.com/user-attachments/assets/3e0858a4-cb01-4364-ab64-57a25f4b4d80)
+
 3. Agregue el botón Save/Update. Respetando la arquitectura de módulos actual del cliente, haga que al oprimirse el botón:
 	1. Se haga PUT al API, con el plano actualizado, en su recurso REST correspondiente.
 	2. Se haga GET al recurso /blueprints, para obtener de nuevo todos los planos realizados.
@@ -58,7 +62,9 @@
 
     ![Image](https://github.com/user-attachments/assets/d3b049c6-540f-4a74-9c7c-6a903f14cf10)
 
-	
+    ![Image](https://github.com/user-attachments/assets/92e5e6de-e79a-4eed-a108-fd97f125c8cd)
+
+    ![Image](https://github.com/user-attachments/assets/800e68e8-7f4d-44ab-b9f3-41024c0d7cb0)
 
 4. Agregue el botón 'Create new blueprint', de manera que cuando se oprima: 
 	* Se borre el canvas actual.
@@ -69,10 +75,13 @@
 	1. Hacer POST al recurso /blueprints, para crear el nuevo plano.
 	2. Hacer GET a este mismo recurso, para actualizar el listado de planos y el puntaje del usuario.
 
-   ![Image](https://github.com/user-attachments/assets/f9b5c0e9-46c9-4c18-bc2a-61614f81ed9b)
+    ![Image](https://github.com/user-attachments/assets/f9b5c0e9-46c9-4c18-bc2a-61614f81ed9b)
 
-   ![Image](https://github.com/user-attachments/assets/6baa511f-0146-46b5-8b6c-94cd2288673d)
+    ![Image](https://github.com/user-attachments/assets/6baa511f-0146-46b5-8b6c-94cd2288673d)
 
+   ![Image](https://github.com/user-attachments/assets/a075bc53-a183-4cd3-933b-ff08334e7a15)
+
+![Image](https://github.com/user-attachments/assets/3591ab55-71f5-4aa7-bed7-f4b0eb7bc9c7)
 
 5. Agregue el botón 'DELETE', de manera que (también con promesas):
 	* Borre el canvas.
@@ -86,6 +95,10 @@
 	![Image](https://github.com/user-attachments/assets/675d6509-5aae-436a-8912-05804db2fabe)
 	
 	![Image](https://github.com/user-attachments/assets/de8a4316-d244-4496-8fcc-e40a6fb44d51)
+
+   ![Image](https://github.com/user-attachments/assets/2c2dba34-a2c2-4795-8c6a-b345907d9a77)
+
+![Image](https://github.com/user-attachments/assets/889253d3-562b-4c5f-afcf-9aa0dca7a964)
 
 ### Criterios de evaluación
 
