@@ -69,6 +69,41 @@ var app = (function () {
         });
     }
 
+    function saveOrUpdateBlueprint() {
+        if (!selectedAuthor || !currentBlueprint) {
+            console.log("No hay un blueprint seleccionado para guardar.");
+            return;
+        }
+
+        let blueprintData = {
+            author: selectedAuthor,
+            name: currentBlueprint,
+            points: points
+        };
+
+        console.log("Enviando actualización al servidor:", blueprintData);
+
+        // 1. PUT al API para actualizar el blueprint
+        $.ajax({
+            url: `http://localhost:8080/blueprints/${selectedAuthor}/${currentBlueprint}`,
+            type: 'PUT',
+            data: JSON.stringify(blueprintData),
+            contentType: "application/json"
+        }).then(() => {
+            console.log("Blueprint actualizado correctamente.");
+
+            // 2. GET para actualizar la lista de blueprints
+            return $.get(`http://localhost:8080/blueprints/${selectedAuthor}`);
+        }).then((blueprints) => {
+            console.log("Lista de blueprints actualizada:", blueprints);
+
+            // 3. Actualizar la tabla y los puntos totales
+            updateBlueprintsInfo(blueprints);
+        }).catch((error) => {
+            console.error("Error en la actualización del blueprint:", error);
+        });
+    }
+
     function initCanvasEvent() {
         let canvas = document.getElementById("myCanvas");
         let ctx = canvas.getContext("2d");
@@ -113,6 +148,7 @@ var app = (function () {
             });
         },
         drawBlueprint: drawBlueprint,
+        saveOrUpdateBlueprint: saveOrUpdateBlueprint,
         initCanvasEvent: initCanvasEvent, // Exponemos la función
         setApi: function (newApi) {
             api = newApi; // Permite cambiar dinámicamente la fuente de datos
@@ -129,6 +165,9 @@ $(document).ready(function () {
         } else {
             console.log("Ingrese un autor válido.");
         }
+    });
+    $("#btn-save-blueprints").click(function () {
+        app.saveOrUpdateBlueprint();
     });
     if (window.PointerEvent) {
         app.initCanvasEvent();
