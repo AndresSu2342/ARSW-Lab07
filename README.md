@@ -1,7 +1,13 @@
 #### Escuela Colombiana de Ingeniería
-#### Procesos de desarrollo de software - PDSW
-#### Construción de un cliente 'grueso' con un API REST, HTML5, Javascript y CSS3. Parte II.
+### Arquitecturas de Software
 
+---
+
+### Integrantes: Joan S. Acevedo Aguilar - Cesar A. Borray Suarez
+
+---
+
+#### Construción de un cliente 'grueso' con un API REST, HTML5, Javascript y CSS3. Parte II.
 
 
 ![](img/mock2.png)
@@ -50,6 +56,10 @@
 	```
 	* Como en este caso se tienen tres operaciones basadas en _callbacks_, y que las mismas requieren realizarse en un orden específico, tenga en cuenta cómo usar las promesas de JavaScript [mediante alguno de los ejemplos disponibles](http://codepen.io/hcadavid/pen/jrwdgK).
 
+    ![Image](https://github.com/user-attachments/assets/d3b049c6-540f-4a74-9c7c-6a903f14cf10)
+
+	
+
 4. Agregue el botón 'Create new blueprint', de manera que cuando se oprima: 
 	* Se borre el canvas actual.
 	* Se solicite el nombre del nuevo 'blueprint' (usted decide la manera de hacerlo).
@@ -59,10 +69,23 @@
 	1. Hacer POST al recurso /blueprints, para crear el nuevo plano.
 	2. Hacer GET a este mismo recurso, para actualizar el listado de planos y el puntaje del usuario.
 
+   ![Image](https://github.com/user-attachments/assets/f9b5c0e9-46c9-4c18-bc2a-61614f81ed9b)
+
+   ![Image](https://github.com/user-attachments/assets/6baa511f-0146-46b5-8b6c-94cd2288673d)
+
+
 5. Agregue el botón 'DELETE', de manera que (también con promesas):
 	* Borre el canvas.
 	* Haga DELETE del recurso correspondiente.
 	* Haga GET de los planos ahora disponibles.
+
+    ![Image](https://github.com/user-attachments/assets/5787e192-9fcc-4395-9874-cf8ba6f2d2b6)
+
+	![Image](https://github.com/user-attachments/assets/b57090bb-7eb4-42b9-bacc-55b365223a9f)
+	
+	![Image](https://github.com/user-attachments/assets/675d6509-5aae-436a-8912-05804db2fabe)
+	
+	![Image](https://github.com/user-attachments/assets/de8a4316-d244-4496-8fcc-e40a6fb44d51)
 
 ### Criterios de evaluación
 
