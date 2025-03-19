@@ -1,8 +1,9 @@
 var app = (function () {
     var selectedAuthor = null;
     var currentBlueprint = null;
-    var points = []; // Lista de puntos capturados
-    var api = apiclient; // Cambia entre 'apimock' y 'apiclient' aquí
+    var isNewBlueprint = false; // Variable para rastrear si es un nuevo blueprint
+    var points = [];
+    var api = apiclient;
 
     function updateBlueprintsInfo(blueprints) {
         console.log("Datos recibidos de la API:", blueprints);
@@ -44,19 +45,15 @@ var app = (function () {
                 console.log("No se encontraron puntos en el blueprint.");
                 return;
             }
-            // Actualizamos el título y la variable actual
             $("#blueprint-title").text(`Current blueprint: ${bpname}`);
-             currentBlueprint = bpname;
-
-            // Guardamos los puntos obtenidos
+            currentBlueprint = bpname;
+            isNewBlueprint = false; // No es un nuevo blueprint, ya existe en la base de datos
             points = blueprint.points;
 
-            // Limpiar el canvas antes de dibujar
             let canvas = document.getElementById("myCanvas");
             let ctx = canvas.getContext("2d");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dibujar los puntos
             if (points.length > 0) {
                 ctx.beginPath();
                 ctx.moveTo(points[0].x, points[0].y);
@@ -81,27 +78,59 @@ var app = (function () {
             points: points
         };
 
-        console.log("Enviando actualización al servidor:", blueprintData);
+        console.log("Guardando blueprint:", blueprintData);
 
-        // 1. PUT al API para actualizar el blueprint
+        let url, requestType;
+
+        if (isNewBlueprint) {
+            url = `http://localhost:8080/blueprints`;
+            requestType = "POST";
+        } else {
+            url = `http://localhost:8080/blueprints/${selectedAuthor}/${currentBlueprint}`;
+            requestType = "PUT";
+        }
+
         $.ajax({
-            url: `http://localhost:8080/blueprints/${selectedAuthor}/${currentBlueprint}`,
-            type: 'PUT',
+            url: url,
+            type: requestType,
             data: JSON.stringify(blueprintData),
             contentType: "application/json"
         }).then(() => {
-            console.log("Blueprint actualizado correctamente.");
-
-            // 2. GET para actualizar la lista de blueprints
+            console.log("Blueprint guardado correctamente.");
+            // Obtener lista actualizada de blueprints
             return $.get(`http://localhost:8080/blueprints/${selectedAuthor}`);
         }).then((blueprints) => {
-            console.log("Lista de blueprints actualizada:", blueprints);
-
-            // 3. Actualizar la tabla y los puntos totales
             updateBlueprintsInfo(blueprints);
+            isNewBlueprint = false; // Una vez guardado, ya no es un blueprint nuevo
         }).catch((error) => {
-            console.error("Error en la actualización del blueprint:", error);
+            console.error("Error al guardar el blueprint:", error);
         });
+    }
+
+    function createNewBlueprint() {
+        if (!selectedAuthor) {
+            console.log("Debe seleccionar un autor antes de crear un nuevo blueprint.");
+            return;
+        }
+
+        let blueprintName = prompt("Ingrese el nombre del nuevo blueprint:");
+
+        if (!blueprintName || blueprintName.trim() === "") {
+            console.log("Nombre de blueprint inválido.");
+            return;
+        }
+
+        // Limpiar canvas
+        let canvas = document.getElementById("myCanvas");
+        let ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Configurar el nuevo blueprint correctamente
+        currentBlueprint = blueprintName.trim();
+        isNewBlueprint = true;
+        points = [];
+
+        $("#blueprint-title").text(`Current blueprint: ${currentBlueprint}`);
     }
 
     function initCanvasEvent() {
@@ -109,7 +138,7 @@ var app = (function () {
         let ctx = canvas.getContext("2d");
 
         function addPoint(event) {
-             if (!currentBlueprint) {
+            if (!currentBlueprint) {
                 console.log("No se puede agregar puntos sin seleccionar un blueprint.");
                 return;
             }
@@ -121,7 +150,6 @@ var app = (function () {
             console.log(`Punto agregado: (${x}, ${y})`);
             points.push({ x: x, y: y });
 
-            // Dibujar la línea si hay al menos 2 puntos
             if (points.length > 1) {
                 ctx.beginPath();
                 ctx.moveTo(points[points.length - 2].x, points[points.length - 2].y);
@@ -139,24 +167,19 @@ var app = (function () {
             console.log(`Solicitando planos para el autor: ${authname}`);
 
             api.getBlueprintsByAuthor(authname, function (blueprints) {
-                if (!blueprints) {
-                    console.log("El API devolvió un valor nulo o indefinido.");
-                    updateBlueprintsInfo([]);
-                } else {
-                    updateBlueprintsInfo(blueprints);
-                }
+                updateBlueprintsInfo(blueprints || []);
             });
         },
         drawBlueprint: drawBlueprint,
         saveOrUpdateBlueprint: saveOrUpdateBlueprint,
-        initCanvasEvent: initCanvasEvent, // Exponemos la función
+        createNewBlueprint: createNewBlueprint,
+        initCanvasEvent: initCanvasEvent,
         setApi: function (newApi) {
-            api = newApi; // Permite cambiar dinámicamente la fuente de datos
+            api = newApi;
         }
     };
 })();
 
-// Inicializar el manejador de eventos cuando la página cargue
 $(document).ready(function () {
     $("#btn-get-blueprints").click(function () {
         let autor = $("#input-autor").val().trim();
@@ -166,9 +189,15 @@ $(document).ready(function () {
             console.log("Ingrese un autor válido.");
         }
     });
+
     $("#btn-save-blueprints").click(function () {
         app.saveOrUpdateBlueprint();
     });
+
+    $("#btn-create-blueprint").click(function () {
+        app.createNewBlueprint();
+    });
+
     if (window.PointerEvent) {
         app.initCanvasEvent();
     }
