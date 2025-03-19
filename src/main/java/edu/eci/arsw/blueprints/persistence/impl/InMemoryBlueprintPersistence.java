@@ -134,4 +134,24 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
         System.out.println("Plano actualizado: " + name + " de " + author);
     }
 
+    /**
+     * Deletes a blueprint by its author and name.
+     * If the blueprint does not exist, an exception is thrown.
+     *
+     * @param author The name of the blueprint's author.
+     * @param name The name of the blueprint.
+     * @throws BlueprintNotFoundException If the blueprint is not found.
+     */
+    @Override
+    public void deleteBlueprint(String author, String name) throws BlueprintNotFoundException {
+        Tuple<String, String> key = new Tuple<>(author, name);
+
+        if (!blueprints.containsKey(key)) {
+            throw new BlueprintNotFoundException("No existe el plano: " + name);
+        }
+
+        blueprints.remove(key);
+        System.out.println("Plano eliminado correctamente: " + name + " de " + author);
+    }
+
 }

@@ -61,4 +61,13 @@ public interface BlueprintsPersistence {
      */
     public void updateBlueprint(String author, String name, Blueprint updatedBlueprint) throws BlueprintNotFoundException;
 
+    /**
+     * Deletes a blueprint by its author and name.
+     * Removes the blueprint from storage if it exists.
+     *
+     * @param author The name of the blueprint's author.
+     * @param name The name of the blueprint.
+     * @throws BlueprintNotFoundException If the blueprint does not exist.
+     */
+    public void deleteBlueprint(String author, String name) throws BlueprintNotFoundException;
 }

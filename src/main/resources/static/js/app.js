@@ -133,6 +133,42 @@ var app = (function () {
         $("#blueprint-title").text(`Current blueprint: ${currentBlueprint}`);
     }
 
+    function deleteBlueprint() {
+        if (!selectedAuthor || !currentBlueprint) {
+            console.log("No hay un blueprint seleccionado para eliminar.");
+            return;
+        }
+
+        let confirmDelete = confirm(`¿Estás seguro de eliminar el blueprint "${currentBlueprint}"?`);
+        if (!confirmDelete) return;
+
+        let url = `http://localhost:8080/blueprints/${selectedAuthor}/${currentBlueprint}`;
+
+        $.ajax({
+            url: url,
+            type: "DELETE",
+            contentType: "application/json"
+        }).then(() => {
+            console.log("Blueprint eliminado correctamente.");
+            currentBlueprint = null;
+            points = [];
+
+            // Limpiar el canvas
+            let canvas = document.getElementById("myCanvas");
+            let ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            $("#blueprint-title").text("");
+
+            // Obtener lista actualizada de blueprints
+            return $.get(`http://localhost:8080/blueprints/${selectedAuthor}`);
+        }).then((blueprints) => {
+            updateBlueprintsInfo(blueprints);
+        }).catch((error) => {
+            console.error("Error al eliminar el blueprint:", error);
+        });
+    }
+
     function initCanvasEvent() {
         let canvas = document.getElementById("myCanvas");
         let ctx = canvas.getContext("2d");
@@ -173,6 +209,7 @@ var app = (function () {
         drawBlueprint: drawBlueprint,
         saveOrUpdateBlueprint: saveOrUpdateBlueprint,
         createNewBlueprint: createNewBlueprint,
+        deleteBlueprint: deleteBlueprint,
         initCanvasEvent: initCanvasEvent,
         setApi: function (newApi) {
             api = newApi;
@@ -197,7 +234,9 @@ $(document).ready(function () {
     $("#btn-create-blueprint").click(function () {
         app.createNewBlueprint();
     });
-
+    $("#btn-delete-blueprint").click(function () {
+        app.deleteBlueprint();
+    });
     if (window.PointerEvent) {
         app.initCanvasEvent();
     }

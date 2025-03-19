@@ -118,4 +118,24 @@ public class BlueprintAPIController {
         }
     }
 
+    /**
+     * Deletes a blueprint by its author and name.
+     * Handles HTTP DELETE requests to remove a specific blueprint.
+     *
+     * @param author The name of the blueprint's author.
+     * @param bpname The name of the blueprint.
+     * @return a ResponseEntity with the status of the delete operation.
+     */
+    @DeleteMapping(value = "/{author}/{bpname}")
+    public ResponseEntity<?> deleteBlueprint(@PathVariable("author") String author, @PathVariable("bpname") String bpname) {
+        try {
+            blueprintsServices.deleteBlueprint(author, bpname);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204: No Content
+        } catch (BlueprintNotFoundException e) {
+            return new ResponseEntity<>("El plano no existe: " + bpname, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al eliminar el plano", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
