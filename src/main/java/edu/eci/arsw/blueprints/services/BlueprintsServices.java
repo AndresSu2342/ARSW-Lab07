@@ -16,32 +16,50 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
- *
+ * Service layer for managing blueprint operations.
+ * Handles business logic related to blueprint storage and retrieval.
  * @author hcadavid
  */
 @Service
 public class BlueprintsServices {
-   
+
     @Autowired
     BlueprintsPersistence bpp=null;
 
     @Autowired
     @Qualifier("subsamplingFilter")  // Values: "subsamplingFilter" and "redundancyFilter"
     private BlueprintFilter blueprintFilter;
-    
-    public void addNewBlueprint(Blueprint bp) throws BlueprintPersistenceException {
-        bpp.saveBlueprint(bp);
-    }
-    
-    public Set<Blueprint> getAllBlueprints() throws BlueprintNotFoundException{
-        // return bpp.getAllBlueprints();      retorno sin filtro
-        return bpp.getAllBlueprints().stream()
-                .map(blueprintFilter::filter)
-                .collect(Collectors.toSet());
-    }
-    
+
     /**
-     * 
+     * Adds a new blueprint to the system.
+     * @param blueprint the blueprint to be added
+     * @throws BlueprintPersistenceException if the blueprint already exists
+     */
+    public void addNewBlueprint(Blueprint blueprint) throws BlueprintPersistenceException {
+        try {
+            Blueprint existing = bpp.getBlueprint(blueprint.getAuthor(), blueprint.getName());
+            if (existing != null) {
+                throw new BlueprintPersistenceException("El plano ya existe: " + blueprint.getName());
+            }
+        } catch (BlueprintNotFoundException e) {
+            bpp.saveBlueprint(blueprint);
+        }
+    }
+
+    /**
+     * Retrieves all stored blueprints, applying the selected filter.
+     * @return a set of filtered blueprints
+     * @throws BlueprintNotFoundException if no blueprints are found
+     */
+    public Set<Blueprint> getAllBlueprints() throws BlueprintNotFoundException{
+        return bpp.getAllBlueprints();
+        //return bpp.getAllBlueprints().stream()        retorno con filtro
+                //.map(blueprintFilter::filter)
+                //.collect(Collectors.toSet());
+    }
+
+    /**
+     *
      * @param author blueprint's author
      * @param name blueprint's name
      * @return the blueprint of the given name created by the given author
@@ -52,12 +70,12 @@ public class BlueprintsServices {
         if (bp == null) {
             throw new BlueprintNotFoundException("Blueprint not found.");
         }
-        // return bp;      retorno sin filtro
-        return blueprintFilter.filter(bp);
+        return bp;
+        // return blueprintFilter.filter(bp);      retorno con filtro
     }
-    
+
     /**
-     * 
+     *
      * @param author blueprint's author
      * @return all the blueprints of the given author
      * @throws BlueprintNotFoundException if the given author doesn't exist
@@ -67,10 +85,36 @@ public class BlueprintsServices {
         if (blueprints == null || blueprints.isEmpty()) {
             throw new BlueprintNotFoundException("No blueprints found for author: " + author);
         }
-        // return blueprints;      retorno sin filtro
-        return blueprints.stream()
-                .map(blueprintFilter::filter)
-                .collect(Collectors.toSet());
+        return blueprints;
+        // return blueprints.stream()                   retorno con filtro
+                //.map(blueprintFilter::filter)
+                //.collect(Collectors.toSet());
     }
-    
+
+    /**
+     * Updates an existing blueprint.
+     * @param author blueprint's author
+     * @param name blueprint's name
+     * @param updatedBlueprint updated blueprint data
+     * @throws BlueprintNotFoundException if the blueprint does not exist
+     */
+    public void updateBlueprint(String author, String name, Blueprint updatedBlueprint) throws BlueprintNotFoundException {
+        Blueprint existing = bpp.getBlueprint(author, name);
+        if (existing == null) {
+            throw new BlueprintNotFoundException("El plano no existe: " + name);
+        }
+        bpp.updateBlueprint(author, name, updatedBlueprint);
+    }
+
+    /**
+     * Deletes a blueprint by its author and name.
+     * Calls the persistence layer to remove the blueprint.
+     *
+     * @param author The name of the blueprint's author.
+     * @param name The name of the blueprint.
+     * @throws BlueprintNotFoundException If the blueprint does not exist.
+     */
+    public void deleteBlueprint(String author, String name) throws BlueprintNotFoundException {
+        bpp.deleteBlueprint(author, name);
+    }
 }
